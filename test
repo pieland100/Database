@@ -1,0 +1,199 @@
+Public Class Form1
+    Dim intcount, intthing As Integer
+    Dim intPCount, intFcount As Integer
+    Dim c(100) As Integer
+    Dim I(100) As Integer
+    Private Sub Flash_Tick(sender As Object, e As EventArgs) Handles Flash.Tick
+        If c(intFcount) = 1 Then
+            PnlB.BackColor = Color.Blue
+        Else
+            PnlB.BackColor = Color.MidnightBlue
+        End If
+        If c(intFcount) = 2 Then
+            PnlR.BackColor = Color.Red
+        Else
+            PnlR.BackColor = Color.Maroon
+        End If
+        If c(intFcount) = 3 Then
+            PnlY.BackColor = Color.Yellow
+        Else
+            PnlY.BackColor = Color.DarkGoldenrod
+        End If
+        If c(intFcount) = 4 Then
+            PnlG.BackColor = Color.Lime
+        Else
+            PnlG.BackColor = Color.DarkGreen
+        End If
+        intFcount += 1
+        If intFcount > intcount + 1 Then
+            Flash.Enabled = False
+            PnlG.BackColor = Color.DarkGreen
+            PnlY.BackColor = Color.DarkGoldenrod
+            PnlR.BackColor = Color.Maroon
+            PnlB.BackColor = Color.MidnightBlue
+        End If
+      
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        intcount = 1
+        intFcount = 1
+        intPCount = 1
+        ListBox1.Visible = False
+        Flash.Interval = 500
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles BtnExit.Click
+        Close()
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles BtnBegin.Click
+        Rnd()
+        BtnBegin.Enabled = False
+        Flash.Enabled = True
+    End Sub
+
+    Private Sub BtnReset_Click(sender As Object, e As EventArgs) Handles BtnReset.Click
+        Flash.Enabled = False
+        res()
+    End Sub
+
+    Private Sub czech()
+        If intcount > 99 Then
+            MsgBox("You win, you most likely cheated but good game")
+        End If
+        If I(intPCount) = c(intPCount) Then
+            If intPCount < intcount Then
+                intPCount += 1
+            Else
+                intFcount = 1
+                intPCount = 1
+                intcount += 1
+                Rnd()
+                intPCount = 1
+                Flash.Enabled = True
+            End If
+        ElseIf c(intPCount) = 1 Then
+            MsgBox("Sorry, the correct color was blue, you had a score of " & (intcount - 1))
+            res()
+        ElseIf c(intPCount) = 2 Then
+            MsgBox("Sorry, the correct color was red, you had a score of " & (intcount - 1))
+            res()
+        ElseIf c(intPCount) = 3 Then
+            MsgBox("Sorry, the correct color was yellow, you had a score of " & (intcount - 1))
+            res()
+        ElseIf c(intPCount) = 4 Then
+            MsgBox("Sorry, the correct color was green, you had a score of " & (intcount - 1))
+            res()
+        End If
+    End Sub
+    Private Sub Rnd()
+        Dim rn As New Random
+        Randomize()
+        c(intcount) = rn.Next(1, 5)
+        If c(intcount) = 1 Then ListBox1.Items.Add("Blue")
+        If c(intcount) = 2 Then ListBox1.Items.Add("Red")
+        If c(intcount) = 3 Then ListBox1.Items.Add("Yellow")
+        If c(intcount) = 4 Then ListBox1.Items.Add("Green")
+    End Sub
+    Private Sub res()
+        For x = intPCount To 1
+            c(intPCount) = 0
+            I(intPCount) = 0
+            If intPCount > 0 Then intPCount -= 1
+        Next
+        BtnBegin.Enabled = True
+        intcount = 1
+        intPCount = 1
+        intFcount = 1
+        Flash.Enabled = False
+        ListBox1.Items.Clear()
+        PnlG.BackColor = Color.DarkGreen
+        PnlY.BackColor = Color.DarkGoldenrod
+        PnlR.BackColor = Color.Maroon
+        PnlB.BackColor = Color.MidnightBlue
+    End Sub
+    Private Sub PnlG_MouseClick(sender As Object, e As MouseEventArgs) Handles PnlG.MouseClick
+        I(intPCount) = 4
+        PnlG.BackColor = Color.Lime
+        Response.Enabled = True
+        czech()
+    End Sub
+
+    Private Sub PnlR_MouseClick(sender As Object, e As MouseEventArgs) Handles PnlR.MouseClick
+        I(intPCount) = 2
+        PnlR.BackColor = Color.Red
+        Response.Enabled = True
+        czech()
+    End Sub
+
+    Private Sub PnlY_MouseClick(sender As Object, e As MouseEventArgs) Handles PnlY.MouseClick
+        I(intPCount) = 3
+        PnlY.BackColor = Color.Yellow
+        Response.Enabled = True
+        czech()
+    End Sub
+
+    Private Sub PnlB_MouseClick(sender As Object, e As MouseEventArgs) Handles PnlB.MouseClick
+        I(intPCount) = 1
+        PnlB.BackColor = Color.Blue
+        Response.Enabled = True
+        czech()
+    End Sub
+
+    Private Sub CheatingToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheatingToolStripMenuItem.Click
+        ListBox1.Visible = True
+        Flash.Interval = 500
+    End Sub
+
+    Private Sub NormalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NormalToolStripMenuItem.Click
+        ListBox1.Visible = False
+        Flash.Interval = 500
+    End Sub
+
+    Private Sub HardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HardToolStripMenuItem.Click
+        ListBox1.Visible = False
+        Flash.Interval = 300
+    End Sub
+
+    Private Sub Response_Tick(sender As Object, e As EventArgs) Handles Response.Tick
+        PnlG.BackColor = Color.DarkGreen
+        PnlY.BackColor = Color.DarkGoldenrod
+        PnlR.BackColor = Color.Maroon
+        PnlB.BackColor = Color.MidnightBlue
+        Response.Enabled = False
+    End Sub
+
+    Private Sub OnToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OnToolStripMenuItem.Click
+        ListBox1.Visible = True
+    End Sub
+
+    Private Sub OffToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OffToolStripMenuItem.Click
+        ListBox1.Visible = False
+    End Sub
+
+    Private Sub CloseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseToolStripMenuItem.Click
+        Close()
+    End Sub
+
+    Private Sub ResetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ResetToolStripMenuItem.Click
+        res()
+    End Sub
+
+    Private Sub FlashingLightsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FlashingLightsToolStripMenuItem.Click
+        ListBox1.Visible = False
+        Flash.Interval = 50
+    End Sub
+
+    Private Sub DisapointToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DisapointToolStripMenuItem.Click
+        intcount = 100
+    End Sub
+
+    Private Sub HzToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HzToolStripMenuItem.Click
+        Flash.Interval = 17
+    End Sub
+
+    Private Sub HzToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles HzToolStripMenuItem1.Click
+        Flash.Interval = 11
+    End Sub
+End Class
